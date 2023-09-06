@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Text Adventure Game</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+   
+</head>
+<body>
+    <h1>{{ room.title }}</h1>
+    <p>{{ room.description }}</p>
+
+    <h2>Actions:</h2>
+
+    <div class="actions-container"></div>
+  
+  <div>
+    <h2>Inventory:</h2>
+{% if inventory %}
+    <ul>
+        {% for item_id in inventory %}
+            <li>{{ items[item_id].name }}: {{ items[item_id].description }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Your inventory is empty.</p>
+{% endif %} 
+  <div>
+
+  <div>
+    <h2>Stats</h2>
+    <p>Health: {{ player_stats.health }}</p>
+    <p>Strength: {{ player_stats.strength }}</p>
+    <p>Agility: {{ player_stats.agility }}</p>
+    <p>Defense: {{ player_stats.defense }}</p>
+    <p>Magika: {{ player_stats.magika }}</p>
+    <!-- Add more stats as needed -->
+  </div>
+</div>
+</body>
+</html>

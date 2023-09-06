@@ -1,13 +1,53 @@
-import streamlit as st
+import os
+from flask import Flask, render_template, request, session
 
-def main():
-    st.title("Text Input Web App")
-    
-    # Text input
-    user_input = st.text_input("Enter some text:", "")
-    
-    # Display the input
-    st.write("You entered:", user_input)
+app = Flask(__name__, static_url_path='/static')
 
-if __name__ == "__main__":
-    main()
+rooms = {
+    "wake_up": {
+        "title": "Wake Up",
+        "description": "You are asleep, you need to wake up. We need you.",
+        "options": {
+            "dark_room": "Wake Up",
+        },
+    },
+}
+
+current_room = "wake_up"
+
+items = {
+    1: {
+        "name": "op mega sword",
+        "description": "gives you the strength of an alcoholic father after a night out."
+    },
+    2: {
+        "name": "Key",
+        "description": "Opens a door."
+    },
+}
+
+inventory = []
+
+player_stats = {
+  "health": 100,
+  "strength": 10,
+  "magika": 100,
+  "defense": 0,
+  "agility": 5,
+}
+
+@app.route('/')
+def index():
+    return render_template('home.html')
+
+@app.route('/game')
+def game():
+    room = rooms[current_room]
+    return render_template('game.html', room=room, inventory=inventory, items=items, player_stats=player_stats)
+
+
+
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
