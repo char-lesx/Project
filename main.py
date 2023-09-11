@@ -8,8 +8,17 @@ rooms = {
         "title": "Wake Up",
         "description": "You are asleep, you need to wake up. We need you.",
         "options": {
-            "dark_room": "Wake Up",
+            "awake": "Wake Up",
         },
+    },
+
+    "awake": {
+        "title": "test",
+        "description": "test",
+        "options": {
+            "": "",
+        }
+
     },
 }
 
