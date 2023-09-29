@@ -50,7 +50,7 @@ current_room = "wake_up"
 items = {
     1: {
         "name": "op mega sword",
-        "description": "gives you the strength of an alcoholic father after a night out."
+        "description": "gives you the strength of an alcoholic father after a night out..."
     },
     2: {
         "name": "Key",
