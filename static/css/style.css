@@ -1,82 +1,145 @@
+/* Reset some default styles */
+body, h1, p {
+  margin: 0;
+  padding: 0;
+}
+
+/* Global Styles */
 body {
-    background-color: black;
-    color: #00FF00;
-    font-family: "Courier New", Courier, monospace;
-    font-size: 16px;
-    overflow: hidden;
-  }
-  
-  h1 {
-    color: #00FF00;
-    font-size: 18px;
-  }
-  
-  p {
-    margin-bottom: 10px;
-  }
-  
-  .actions-container {
-    display: flex;
-    flex-direction: row;
-    margin-top: 20px;
-  }
-  
-  .actions-container form {
-    margin-right: 10px;
-  }
-  
-  input[type="submit"] {
-    background-color: black;
-    color: #00FF00;
-    border: 1px solid #00FF00;
-    padding: 10px 15px;
-    font-family: monospace;
-    font-size: 14px;
-    cursor: pointer;
-  }
-  
-  input[type="submit"]:hover {
-    background-color: #00FF00;
-    color: black;
-  }
-  
-  .invisible-option input[type="submit"] {
-    opacity: 0;
-    cursor: default;
-  }
-  
-  .invisible-option input[type="submit"]:hover {
-    opacity: 1;
-    cursor: pointer;
-  }
-  
-  .button {
-    background-color: black;
-    color: #00FF00;
-    border: 1px solid #00FF00;
-    padding: 10px 15px;
-    font-family: monospace;
-    font-size: 14px;
-    cursor: pointer;
-    text-decoration: none;
-  }
-  
-  .button:hover {
-    background-color: #00FF00;
-    color: black;
-  }
-  
-  body {
-    background-image: linear-gradient(#000000 30%, #00000000 40%, #000000 50%, #00000000 60%, #000000 70%, #00000000 80%);
-    background-size: 2px 2px;
-  }
-  
-  .container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 20px solid #808080;
-    box-shadow: 0 0 0 10px #808080, inset 0 0 10px 5px #000000;
-    background-color: #000000;
-  }
-  
+  background-color: black;
+  color: #00FF00;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 16px;
+  overflow: hidden;
+}
+
+.container {
+  margin: 0 auto;
+  padding: 20px;
+  width: 300px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 1px solid #00FF00;
+  border-radius: 10px;
+}
+
+h1 {
+  color: #00FF00;
+  font-size: 18px;
+}
+
+p {
+  margin-bottom: 10px;
+}
+
+/* Navigation Menu Styles (for the game page) */
+.nav-menu {
+  text-align: right;
+}
+
+.nav-menu a {
+  color: #00FF00;
+  text-decoration: none;
+  margin-right: 20px;
+}
+
+.nav-menu a:hover {
+  text-decoration: underline;
+}
+
+/* Action Buttons Styles (for the game page) */
+.actions-container {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+}
+
+.actions-container form {
+  margin-right: 10px;
+}
+
+input[type="submit"] {
+  background-color: black;
+  color: #00FF00;
+  border: 1px solid #00FF00;
+  padding: 10px 15px;
+  font-family: monospace;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover {
+  background-color: #00FF00;
+  color: black;
+}
+
+.invisible-option input[type="submit"] {
+  opacity: 0;
+  cursor: default;
+}
+
+.invisible-option input[type="submit"]:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+
+/* Login Form Styles (for the login page) */
+.login-container {
+  margin: 0 auto;
+  padding: 20px;
+  width: 300px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 1px solid #00FF00;
+  border-radius: 10px;
+}
+
+.form-group {
+  margin-bottom: 20px; /* Adjust the spacing between input elements */
+  margin-right: 20px;
+}
+
+.form-group label {
+  display: block;
+  color: #00FF00;
+  font-size: 14px;
+  margin-bottom: 5px;
+  text-align: left; /* Left-align the labels */
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  background-color: black;
+  color: #00FF00;
+  border: 1px solid #00FF00;
+  border-radius: 4px;
+  outline: none;
+  margin-right: 0; /* Remove right margin */
+}
+
+/* Center the login button */
+.login-button {
+  text-align: center;
+}
+
+/* General Button Styles (for login and game pages) */
+.button {
+  background-color: black;
+  color: #00FF00;
+  border: 1px solid #00FF00;
+  padding: 10px 15px;
+  font-family: monospace;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none; /* Remove underlines */
+  display: inline-block;
+  margin-top: 10px;
+}
+
+.button:hover {
+  background-color: #00FF00;
+  color: black;
+}
