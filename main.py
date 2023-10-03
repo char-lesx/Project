@@ -1,7 +1,14 @@
 import os
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, redirect, url_for
+
 
 app = Flask(__name__, static_url_path='/static')
+app.secret_key = 'joebidenlikeschildren'
+
+valid_credentials = {
+    'user1': 'password1',
+    'user2': 'password2'
+}
 
 rooms = {
     "wake_up": {
@@ -68,13 +75,41 @@ player_stats = {
   "agility": 5,
 }
 
-@app.route('/login')
+@app.route('/')
+def home():
+    return render_template('home.html')
+
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        # Check if the provided credentials are valid
+        if username in valid_credentials and valid_credentials[username] == password:
+            # Authentication succeeded
+            session['logged_in'] = True
+            return redirect(url_for('dashboard'))
+        else:
+            # Authentication failed
+            return 'Invalid credentials. Please try again.'
+
+    # If it's a GET request, render the login form
     return render_template('login.html')
 
-@app.route('/')
-def index():
-    return render_template('home.html')
+@app.route('/dashboard')
+def dashboard():
+    # Check if the user is logged in (you can use this check for protected routes)
+    if 'logged_in' in session and session['logged_in']:
+        return redirect(url_for('game'))
+    else:
+        return redirect(url_for('login'))
+
+@app.route('/logout')
+def logout():
+    # Log the user out by removing the session variable
+    session.pop('logged_in', None)
+    return redirect(url_for('home'))
 
 @app.route('/game')
 def game():
@@ -98,7 +133,7 @@ def pick_up_key():
     room = rooms[current_room]
     return render_template('game.html', room=room, inventory=inventory, items=items, player_stats=player_stats)
 
-@app.route('/move/<direction>')
+@app.route('/move/<direction>', methods=['GET', 'POST'])
 def move(direction):
     global current_room
 
@@ -123,6 +158,7 @@ def move(direction):
             room["options"]["unlock"] = "Unlock"  # Set the label of the "Unlock" option to the original text
 
     return render_template('game.html', room=room, inventory=inventory, items=items, player_stats=player_stats)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
