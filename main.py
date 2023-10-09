@@ -5,10 +5,15 @@ from flask import Flask, render_template, request, session, redirect, url_for
 app = Flask(__name__, static_url_path='/static')
 app.secret_key = 'joebidenlikeschildren'
 
-valid_credentials = {
-    'user1': 'password1',
-    'user2': 'password2'
-}
+def load_user_credentials():
+    credentials = {}
+    with open('user_credentials.txt', 'r') as file:
+        for line in file:
+            username, password = line.strip().split(',')
+            credentials[username] = password
+    return credentials
+
+valid_credentials = load_user_credentials()
 
 rooms = {
     "wake_up": {
@@ -75,11 +80,11 @@ player_stats = {
   "agility": 5,
 }
 
-@app.route('/')
+@app.route('/home')
 def home():
     return render_template('home.html')
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
@@ -101,7 +106,7 @@ def login():
 def dashboard():
     # Check if the user is logged in (you can use this check for protected routes)
     if 'logged_in' in session and session['logged_in']:
-        return redirect(url_for('game'))
+        return redirect(url_for('home'))
     else:
         return redirect(url_for('login'))
 
@@ -110,6 +115,31 @@ def logout():
     # Log the user out by removing the session variable
     session.pop('logged_in', None)
     return redirect(url_for('home'))
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        # Check if the username is already taken
+        if username in valid_credentials:
+            return 'Username already exists. Please choose another.'
+
+        # Append the new user's credentials to the text file
+        with open('user_credentials.txt', 'a') as file:
+            file.write(f'{username},{password}\n\n')
+
+        # Add the new user's credentials to the loaded dictionary
+        valid_credentials[username] = password
+
+        # Redirect to the login page
+        return redirect(url_for('login'))
+
+    # If it's a GET request, render the registration form
+    return render_template('register.html')
+
+
 
 @app.route('/game')
 def game():

@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>[Text Adventure Game]</title>
+    <title>Gyattoria</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
    
 </head>
 <body>
+    <br/><br/>
     <h1>{{ room.title }}</h1><br/>
     <p>{{ room.description }}</p>
 
+
+    <br/><br/>
     <h2>Actions:</h2>
 
     <div class="actions-container">
@@ -34,7 +37,8 @@
     {% endif %}
   {% endfor %}
 </div>
-  
+
+<br/><br/>
   <div>
     <h2>Inventory:</h2>
 {% if inventory %}
