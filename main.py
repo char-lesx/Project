@@ -9,8 +9,12 @@ def load_user_credentials():
     credentials = {}
     with open('user_credentials.txt', 'r') as file:
         for line in file:
-            username, password = line.strip().split(',')
-            credentials[username] = password
+            parts = line.strip().split(',')
+            if len(parts) == 2:
+                username, password = parts
+                credentials[username] = password
+            else:
+                print(f"Skipping invalid line: {line}")
     return credentials
 
 valid_credentials = load_user_credentials()
