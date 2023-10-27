@@ -1,10 +1,13 @@
+# Import libraries
 import os
 from flask import Flask, render_template, request, session, redirect, url_for
 
-
+# Define static path for Flask
 app = Flask(__name__, static_url_path='/static')
-app.secret_key = 'joebidenlikeschildren'
+# Define the secret key for Flask
+app.secret_key = 'whoopsiedaisies!'
 
+# Function to load all credentials for the Login page
 def load_user_credentials():
     credentials = {}
     with open('user_credentials.txt', 'r') as file:
@@ -19,6 +22,7 @@ def load_user_credentials():
 
 valid_credentials = load_user_credentials()
 
+# Define the structure of the game: rooms, items, inventory, and player stats
 rooms = {
     "wake_up": {
         "title": "Wake Up",
@@ -61,8 +65,10 @@ rooms = {
         },
     },
 }
+# Define and stores the players location
 current_room = "wake_up"
 
+# Define all items within the game
 items = {
     1: {
         "name": "op mega sword",
@@ -74,8 +80,10 @@ items = {
     },
 }
 
+# Define players inventory
 inventory = []
 
+# Define player's in-game statistics 
 player_stats = {
   "health": 100,
   "strength": 10,
@@ -84,10 +92,12 @@ player_stats = {
   "agility": 5,
 }
 
+# Define route for home page
 @app.route('/home')
 def home():
     return render_template('home.html')
 
+# Define route for Login page
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -106,20 +116,24 @@ def login():
     # If it's a GET request, render the login form
     return render_template('login.html')
 
+# Define route to dashboard
 @app.route('/dashboard')
 def dashboard():
     # Check if the user is logged in (you can use this check for protected routes)
     if 'logged_in' in session and session['logged_in']:
         return redirect(url_for('home'))
     else:
+         # Redirect to the login page
         return redirect(url_for('login'))
 
+# Define route to logout
 @app.route('/logout')
 def logout():
     # Log the user out by removing the session variable
     session.pop('logged_in', None)
     return redirect(url_for('home'))
 
+# Define route to Register page
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -144,7 +158,7 @@ def register():
     return render_template('register.html')
 
 
-
+# Define the game route for the text-based adventure game
 @app.route('/game')
 def game():
     room = rooms[current_room]
@@ -155,6 +169,7 @@ def game():
             room["options"].pop("pick_up_key", None)  # Remove the "pick_up_key" option
     return render_template('game.html', room=room, inventory=inventory, items=items, player_stats=player_stats)
 
+# Define the route for picking up a key in the game
 @app.route('/pick_up_key')
 def pick_up_key():
     global current_room
@@ -167,6 +182,7 @@ def pick_up_key():
     room = rooms[current_room]
     return render_template('game.html', room=room, inventory=inventory, items=items, player_stats=player_stats)
 
+# Define the route for moving within the game
 @app.route('/move/<direction>', methods=['GET', 'POST'])
 def move(direction):
     global current_room
@@ -193,6 +209,6 @@ def move(direction):
 
     return render_template('game.html', room=room, inventory=inventory, items=items, player_stats=player_stats)
 
-
+# Running the program 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))

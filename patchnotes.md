@@ -1,3 +1,3 @@
-v0.14 -
+v0.15 -
 
-    Added patchnotes
+    Added internal commentary.
