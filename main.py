@@ -1,13 +1,9 @@
-# Import libraries
 import os
 from flask import Flask, render_template, request, session, redirect, url_for
 
-# Define static path for Flask
 app = Flask(__name__, static_url_path='/static')
-# Define the secret key for Flask
 app.secret_key = 'whoopsiedaisies!'
 
-# Function to load all credentials for the Login page
 def load_user_credentials():
     credentials = {}
     with open('user_credentials.txt', 'r') as file:
@@ -22,7 +18,6 @@ def load_user_credentials():
 
 valid_credentials = load_user_credentials()
 
-# Define the structure of the game: rooms, items, inventory, and player stats
 rooms = {
     "wake_up": {
         "title": "Wake Up",
@@ -65,10 +60,8 @@ rooms = {
         },
     },
 }
-# Define and stores the players location
 current_room = "wake_up"
 
-# Define all items within the game
 items = {
     1: {
         "name": "op mega sword",
@@ -80,10 +73,8 @@ items = {
     },
 }
 
-# Define players inventory
 inventory = []
 
-# Define player's in-game statistics 
 player_stats = {
   "health": 100,
   "strength": 10,
@@ -92,97 +83,85 @@ player_stats = {
   "agility": 5,
 }
 
-# Define route for home page
 @app.route('/home')
 def home():
     return render_template('home.html')
 
-# Define route for Login page
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
 
-        # Check if the provided credentials are valid
         if username in valid_credentials and valid_credentials[username] == password:
-            # Authentication succeeded
             session['logged_in'] = True
+            session['username'] = username
             return redirect(url_for('dashboard'))
         else:
-            # Authentication failed
             return 'Invalid credentials. Please try again.'
 
-    # If it's a GET request, render the login form
     return render_template('login.html')
 
-# Define route to dashboard
 @app.route('/dashboard')
 def dashboard():
-    # Check if the user is logged in (you can use this check for protected routes)
     if 'logged_in' in session and session['logged_in']:
         return redirect(url_for('home'))
     else:
-         # Redirect to the login page
         return redirect(url_for('login'))
 
-# Define route to logout
-@app.route('/logout')
+@app.route('/logout', methods=['GET', 'POST'])
 def logout():
-    # Log the user out by removing the session variable
-    session.pop('logged_in', None)
-    return redirect(url_for('home'))
+    if 'logged_in' in session:
+        # Save user progress
+        save_user_progress(session['username'])
+        session.pop('logged_in', None)
+        session.pop('username', None)
+    return redirect(url_for('login'))
 
-# Define route to Register page
+def save_user_progress(username):
+    # Save user progress to file or database
+    pass
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
 
-        # Check if the username is already taken
         if username in valid_credentials:
             return 'Username already exists. Please choose another.'
 
-        # Append the new user's credentials to the text file
         with open('user_credentials.txt', 'a') as file:
             file.write(f'{username},{password}\n\n')
 
-        # Add the new user's credentials to the loaded dictionary
         valid_credentials[username] = password
 
-        # Redirect to the login page
         return redirect(url_for('login'))
 
-    # If it's a GET request, render the registration form
     return render_template('register.html')
 
-
-# Define the game route for the text-based adventure game
 @app.route('/game')
 def game():
     room = rooms[current_room]
     if current_room == "dark_room":
-        if 2 not in inventory:  # Check if the key item is not in the inventory
-            room["options"]["pick_up_key"] = "Pick Up Key"  # Add the "pick_up_key" option
+        if 2 not in inventory:
+            room["options"]["pick_up_key"] = "Pick Up Key"
         else:
-            room["options"].pop("pick_up_key", None)  # Remove the "pick_up_key" option
+            room["options"].pop("pick_up_key", None)
     return render_template('game.html', room=room, inventory=inventory, items=items, player_stats=player_stats)
 
-# Define the route for picking up a key in the game
 @app.route('/pick_up_key')
 def pick_up_key():
     global current_room
 
     if current_room == "dark_room":
-        if 2 not in inventory:  # Check if the key item is not in the inventory
-            inventory.append(2)  # Add the key item to the inventory
-            rooms[current_room]["options"].pop("pick_up_key", None)  # Remove the "pick_up_key" option
+        if 2 not in inventory:
+            inventory.append(2)
+            rooms[current_room]["options"].pop("pick_up_key", None)
 
     room = rooms[current_room]
     return render_template('game.html', room=room, inventory=inventory, items=items, player_stats=player_stats)
 
-# Define the route for moving within the game
 @app.route('/move/<direction>', methods=['GET', 'POST'])
 def move(direction):
     global current_room
@@ -196,19 +175,18 @@ def move(direction):
 
     room = rooms[current_room]
     if current_room == "dark_room":
-        if 2 not in inventory:  # Check if the key item is not in the inventory
-            room["options"]["pick_up_key"] = "Pick Up Key"  # Add the "pick_up_key" option
+        if 2 not in inventory:
+            room["options"]["pick_up_key"] = "Pick Up Key"
         else:
-            room["options"].pop("pick_up_key", None)  # Remove the "pick_up_key" option
+            room["options"].pop("pick_up_key", None)
 
     if current_room == "end_of_corridor":
-        if 2 not in inventory:  # Check if the key item is not in the inventory
-            room["options"]["unlock"] = "Locked"  # Change the label of the "Unlock" option
+        if 2 not in inventory:
+            room["options"]["unlock"] = "Locked"
         else:
-            room["options"]["unlock"] = "Unlock"  # Set the label of the "Unlock" option to the original text
+            room["options"]["unlock"] = "Unlock"
 
     return render_template('game.html', room=room, inventory=inventory, items=items, player_stats=player_stats)
 
-# Running the program 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
