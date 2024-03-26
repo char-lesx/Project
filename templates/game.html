@@ -17,6 +17,7 @@
     <h2>Actions:</h2>
 
     <div class="actions-container">
+  
   {% for option, label in room.options.items() %}
     {% if option == 'pick_up_key' and option in room.options and option not in inventory %}
       <form action="/pick_up_key" method="GET">
