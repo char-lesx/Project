@@ -15,32 +15,36 @@
 
     <br/><br/>
     <h2>Actions:</h2>
-
+    
     <div class="actions-container">
-  
-  {% for option, label in room.options.items() %}
-    {% if option == 'pick_up_key' and option in room.options and option not in inventory %}
-      <form action="/pick_up_key" method="GET">
-        <input type="submit" value="{{ label }}">
-      </form>
-    {% elif option == 'unlock' %}
-      {% if label == 'Locked' %}
-        <form class="invisible-option">
-          <input type="submit" value="{{ label }}" disabled>
-        </form>
-      {% else %}
-        <form action="/move/{{ option }}" method="GET">
-          <input type="submit" value="{{ label }}">
-        </form>
-      {% endif %}
-    {% else %}
-      <form action="/move/{{ option }}" method="GET">
-        <input type="submit" value="{{ label }}">
-      </form>
-    {% endif %}
-  {% endfor %}
-</div>
-
+      {% for option, label in room.options.items() %}
+          {% if option == 'pick_up_key' and option in room.options and option not in inventory %}
+              <form action="/pick_up_key" method="GET">
+                  <input type="submit" value="{{ label }}">
+              </form>
+          {% elif option == 'unlock' %}
+              {% if label == 'Locked' %}
+                  <form class="invisible-option">
+                      <input type="submit" value="{{ label }}" disabled>
+                  </form>
+              {% else %}
+                  <form action="/move/{{ option }}" method="GET">
+                      <input type="submit" value="{{ label }}">
+                  </form>
+              {% endif %}
+          {% elif option == 'use_potion' %}
+              {% if 3 in inventory %}
+                  <form action="/use_potion" method="GET">
+                      <input type="submit" value="{{ label }}">
+                  </form>
+              {% endif %}
+          {% else %}
+              <form action="/move/{{ option }}" method="GET">
+                  <input type="submit" value="{{ label }}">
+              </form>
+          {% endif %}
+      {% endfor %}
+  </div>
 <br/><br/>
   <div>
     <h2>Inventory:</h2>
@@ -62,7 +66,7 @@
     <p>Agility: {{ player_stats.agility }}</p>
     <p>Defense: {{ player_stats.defense }}</p>
     <p>Magika: {{ player_stats.magika }}</p>
-    <!-- Add more stats as needed -->
+
   </div>
   <form action="/logout" method="post" class="logout-form">
     <button type="submit" class="button">Logout</button>
